@@ -7,6 +7,7 @@ var toTimeString = Date.prototype.toTimeString;
 var parent = (typeof window !== 'undefined' && window) || (typeof global !== 'undefined' && global);
 var oldIntl = parent.Intl;
 
+
 function mockTimezoneOffset (zone, format) {
 	Date.prototype.getTimezoneOffset = function () {
 		return zone.offset(+this);
@@ -29,6 +30,7 @@ function mockIntlTimeZone (name) {
 		}
 	};
 }
+
 
 exports.guess = {
 	setUp : function (done) {
@@ -86,6 +88,22 @@ exports.guess = {
 		mockTimezoneOffset(tz.zone('America/Los_Angeles'));
 		test.equal(tz.guess(true), 'America/Los_Angeles');
 
+		test.done();
+	},
+
+	"When Intl is available, but timeZone is undefined, should return a guess without logging an error" : function (test) {
+		var oldError = console.error;
+		var errors = '';
+		console.error = function (message) {
+			errors += message;
+		};
+		
+		mockIntlTimeZone(undefined);
+		mockTimezoneOffset(tz.zone('Europe/London'));
+		test.equal(tz.guess(true), 'Europe/London');
+		test.equal(errors, '');
+
+		console.error = oldError;
 		test.done();
 	},
 
