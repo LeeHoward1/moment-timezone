@@ -7,7 +7,6 @@ var toTimeString = Date.prototype.toTimeString;
 var parent = (typeof window !== 'undefined' && window) || (typeof global !== 'undefined' && global);
 var oldIntl = parent.Intl;
 
-
 function mockTimezoneOffset (zone, format) {
 	Date.prototype.getTimezoneOffset = function () {
 		return zone.offset(+this);
@@ -30,7 +29,6 @@ function mockIntlTimeZone (name) {
 		}
 	};
 }
-
 
 exports.guess = {
 	setUp : function (done) {
